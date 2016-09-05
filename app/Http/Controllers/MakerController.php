@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Cache;
+
 use App\Http\Requests;
 
 use App\Maker;
@@ -22,9 +24,12 @@ class MakerController extends Controller
 
     public function index()
     {
-    	$makers = Maker::all();
+    	$makers = Cache::remember('makers' , 15/60 , function()
+        {
+            return Maker::simplePaginate(15);
+        });
 
-    	return Response::json(['data'=>$makers],200) ;
+    	return Response::json(['next' => $makers->nextPageUrl(), 'previous' => $makers->previousPageUrl(), 'data' => $makers->items() ],200) ;
     }
 
     public function store(CreateMakerRequest $request)
