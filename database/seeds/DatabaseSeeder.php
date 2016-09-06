@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Maker;
 use App\User;
 
-class DatabaseSeeder extends Seeder
-{
+class DatabaseSeeder extends Seeder {
+
     /**
      * Run the database seeds.
      *
@@ -15,13 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-    	DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-    	Maker::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Maker::truncate();
         User::truncate();
-    	Model::unguard();
-        // $this->call(UsersTableSeeder::class);
+        DB::table('oauth_clients')->truncate();
+        Model::unguard();
+
         $this->call('MakerSeed');
-        $this->call('UsersSeed');
         $this->call('VehiclesSeed');
+        $this->call('UsersSeed');
+        $this->call('OauthClientSeed');
     }
+
 }
